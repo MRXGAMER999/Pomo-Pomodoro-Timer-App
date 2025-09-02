@@ -18,6 +18,7 @@ import androidx.compose.material.icons.filled.Pause
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -50,23 +51,21 @@ fun PomodoroScreen(
     val minutes = (timeLeftInMillis / 1000) / 60
     val seconds = (timeLeftInMillis / 1000) % 60
 
-    Box(
+    Scaffold(
         modifier = modifier
-            .fillMaxSize()
-            .background(when(currentMode){
+            .fillMaxSize(),
+            containerColor = (when(currentMode){
                 TimerMode.Focus -> Color(0xFFFFF2F2)
                 TimerMode.LongBreak -> Color(0xFFF2FFF5)
                 TimerMode.ShortBreak -> Color(0xFFF2F9FF)
             })
-    ) {
+    ) { innerPadding ->
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.SpaceBetween,
             modifier = Modifier.fillMaxSize()
+                .padding(innerPadding)
         ) {
-
-
-
 
             Spacer(modifier = Modifier.weight(1f))
             Surface(
@@ -91,11 +90,16 @@ fun PomodoroScreen(
                         imageVector = ImageVector.vectorResource(
                             id = when (currentMode) {
                                 TimerMode.Focus -> R.drawable.foucs
-                                TimerMode.ShortBreak, TimerMode.LongBreak -> R.drawable.foucs // You can add break icons here
+                                 TimerMode.LongBreak -> R.drawable.coffee_icon
+                                 TimerMode.ShortBreak -> R.drawable.coffee_icon
                             }
                         ),
                         contentDescription = "Mode icon",
-                        tint = Color(0xFF471515)
+                        tint = when(currentMode){
+                            TimerMode.Focus -> Color(0xFF471515)
+                            TimerMode.LongBreak -> Color(0xFF14401D)
+                            TimerMode.ShortBreak -> Color(0xFF153047)
+                        }
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
@@ -104,16 +108,16 @@ fun PomodoroScreen(
                             TimerMode.ShortBreak -> "Short Break"
                             TimerMode.LongBreak -> "Long Break"
                         },
-                        color = Color(0xFF471515),
+                        color = when(currentMode){
+                            TimerMode.Focus -> Color(0xFF471515)
+                            TimerMode.LongBreak -> Color(0xFF14401D)
+                            TimerMode.ShortBreak -> Color(0xFF153047)
+                        },
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Medium
                     )
                 }
             }
-
-
-
-
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {

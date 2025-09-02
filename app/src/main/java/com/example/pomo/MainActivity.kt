@@ -27,12 +27,9 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             PomoTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    PomodoroScreen(
-                        modifier = Modifier.padding(innerPadding)
-                    )
+                    PomodoroScreen()
                 }
             }
-        }
     }
 }
+
