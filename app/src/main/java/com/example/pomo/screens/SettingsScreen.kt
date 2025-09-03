@@ -185,7 +185,8 @@ fun SettingsNumberPicker(
             .width(80.dp)
             .height(48.dp),
         shape = RoundedCornerShape(8.dp),
-        border = BorderStroke(1.dp, Color.LightGray)
+        border = BorderStroke(1.dp, Color.LightGray),
+        color = Color.White
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -214,29 +215,33 @@ fun SettingsNumberPicker(
             // Arrow buttons column
             Column(
                 modifier = Modifier
-                    .width(20.dp)
-                    .fillMaxHeight(),
-                verticalArrangement = Arrangement.Center
+                    .width(18.dp)
+                    .fillMaxHeight()
             ) {
                 // Up arrow
-                IconButton(
-                    onClick = {
-                        val newValue = (value + 1).coerceIn(range)
-                        if (newValue != value) {
-                            value = newValue
-                            onValueChange(value)
-                        }
-                    },
+                Box(
                     modifier = Modifier
-                        .size(20.dp)
-                        .weight(1f)
+                        .fillMaxWidth()
+                        .weight(1f),
+                    contentAlignment = Alignment.Center
                 ) {
-                    Icon(
-                        imageVector = Icons.Default.KeyboardArrowUp,
-                        contentDescription = "Increase value",
-                        modifier = Modifier.size(14.dp),
-                        tint = Color.Gray
-                    )
+                    IconButton(
+                        onClick = {
+                            val newValue = (value + 1).coerceIn(range)
+                            if (newValue != value) {
+                                value = newValue
+                                onValueChange(value)
+                            }
+                        },
+                        modifier = Modifier.size(20.dp)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.KeyboardArrowUp,
+                            contentDescription = "Increase value",
+                            modifier = Modifier.size(18.dp),
+                            tint = Color(0xFF666666)
+                        )
+                    }
                 }
 
                 // Horizontal divider between arrows
@@ -247,24 +252,29 @@ fun SettingsNumberPicker(
                 )
 
                 // Down arrow
-                IconButton(
-                    onClick = {
-                        val newValue = (value - 1).coerceIn(range)
-                        if (newValue != value) {
-                            value = newValue
-                            onValueChange(value)
-                        }
-                    },
+                Box(
                     modifier = Modifier
-                        .size(20.dp)
-                        .weight(1f)
+                        .fillMaxWidth()
+                        .weight(1f),
+                    contentAlignment = Alignment.Center
                 ) {
-                    Icon(
-                        imageVector = Icons.Default.KeyboardArrowDown,
-                        contentDescription = "Decrease value",
-                        modifier = Modifier.size(14.dp),
-                        tint = Color.Gray
-                    )
+                    IconButton(
+                        onClick = {
+                            val newValue = (value - 1).coerceIn(range)
+                            if (newValue != value) {
+                                value = newValue
+                                onValueChange(value)
+                            }
+                        },
+                        modifier = Modifier.size(20.dp)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.KeyboardArrowDown,
+                            contentDescription = "Decrease value",
+                            modifier = Modifier.size(18.dp),
+                            tint = Color(0xFF666666)
+                        )
+                    }
                 }
             }
         }
