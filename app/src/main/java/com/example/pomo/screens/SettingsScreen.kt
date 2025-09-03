@@ -13,6 +13,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Switch
+import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -32,7 +33,7 @@ fun SettingsScreen() {
 
 
     Surface(shape = RoundedCornerShape(20.dp),
-        tonalElevation = 2.dp,
+        shadowElevation = 2.dp,
         modifier = Modifier.fillMaxWidth().padding(20.dp))
 
     {
@@ -60,7 +61,12 @@ fun SettingsScreen() {
                 Text(text = "Dark Mode", style = MaterialTheme.typography.bodyLarge)
                 Switch(
                     checked = darkMode,
-                    onCheckedChange = { /* Handle dark mode toggle */ }
+                    onCheckedChange = { /* Handle dark mode toggle */ },
+                    colors = SwitchDefaults.colors(
+                        checkedThumbColor = MaterialTheme.colorScheme.primary,
+                        checkedTrackColor = MaterialTheme.colorScheme.primaryContainer,
+                        uncheckedThumbColor = MaterialTheme.colorScheme.secondary,
+                        uncheckedTrackColor = MaterialTheme.colorScheme.secondaryContainer)
                 )
             }
             Row(
@@ -71,7 +77,12 @@ fun SettingsScreen() {
                 Text(text = "Auto Resume Timer", style = MaterialTheme.typography.bodyLarge)
                 Switch(
                     checked = autoResumeTimer,
-                    onCheckedChange = { /* Handle auto resume timer toggle */ }
+                    onCheckedChange = { /* Handle auto resume timer toggle */ },
+                            colors = SwitchDefaults.colors(
+                            checkedThumbColor = MaterialTheme.colorScheme.primary,
+                    checkedTrackColor = MaterialTheme.colorScheme.primaryContainer,
+                    uncheckedThumbColor = MaterialTheme.colorScheme.secondary,
+                    uncheckedTrackColor = MaterialTheme.colorScheme.secondaryContainer)
                 )
             }
             Row(
@@ -82,7 +93,12 @@ fun SettingsScreen() {
                 Text(text = "Sound", style = MaterialTheme.typography.bodyLarge)
                 Switch(
                     checked = sound,
-                    onCheckedChange = { /* Handle sound toggle */ }
+                    onCheckedChange = { /* Handle sound toggle */ },
+                    colors = SwitchDefaults.colors(
+                        checkedThumbColor = MaterialTheme.colorScheme.primary,
+                        checkedTrackColor = MaterialTheme.colorScheme.primaryContainer,
+                        uncheckedThumbColor = MaterialTheme.colorScheme.secondary,
+                        uncheckedTrackColor = MaterialTheme.colorScheme.secondaryContainer)
                 )
             }
             Row(
@@ -93,7 +109,12 @@ fun SettingsScreen() {
                 Text(text = "Notifications", style = MaterialTheme.typography.bodyLarge)
                 Switch(
                     checked = notifications,
-                    onCheckedChange = { /* Handle notifications toggle */ }
+                    onCheckedChange = { /* Handle notifications toggle */ },
+                    colors = SwitchDefaults.colors(
+                        checkedThumbColor = MaterialTheme.colorScheme.primary,
+                        checkedTrackColor = MaterialTheme.colorScheme.primaryContainer,
+                        uncheckedThumbColor = MaterialTheme.colorScheme.secondary,
+                        uncheckedTrackColor = MaterialTheme.colorScheme.secondaryContainer)
                 )
             }
 
