@@ -4,6 +4,7 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -173,77 +174,94 @@ fun SettingsScreen() {
 @Composable
 fun SettingsNumberPicker(
     initialValue: Int,
-    range: IntRange = 1..60, // Default range from 1 to 60
+    range: IntRange = 1..60,
     onValueChange: (Int) -> Unit
 ) {
     var value by remember { mutableStateOf(initialValue) }
 
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween
+    Surface(
+        modifier = Modifier
+            .width(80.dp)
+            .height(48.dp),
+        shape = RoundedCornerShape(8.dp),
+        border = BorderStroke(1.dp, Color.LightGray)
     ) {
-        // The number picker box
-        Surface(modifier = Modifier.width(80.dp) ,
-            shape = MaterialTheme.shapes.medium,
-            border = BorderStroke(1.dp, Color.LightGray)
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            Row(modifier = Modifier.padding(vertical = 4.dp),
-                verticalAlignment = Alignment.CenterVertically
+            // Number text
+            Text(
+                text = "$value",
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(start = 12.dp),
+                fontSize = 16.sp,
+                color = Color.Black
+            )
+
+            // Vertical divider
+            Divider(
+                color = Color.LightGray,
+                modifier = Modifier
+                    .fillMaxHeight()
+                    .width(1.dp)
+            )
+
+            // Arrow buttons column
+            Column(
+                modifier = Modifier
+                    .width(20.dp)
+                    .fillMaxHeight(),
+                verticalArrangement = Arrangement.Center
             ) {
-                // Text displaying the current value
-                Text(
-                    text = "$value",
-                    modifier = Modifier.padding(horizontal = 16.dp),
-                    fontSize = 18.sp
-                )
-                // Vertical separator line
+                // Up arrow
+                IconButton(
+                    onClick = {
+                        val newValue = (value + 1).coerceIn(range)
+                        if (newValue != value) {
+                            value = newValue
+                            onValueChange(value)
+                        }
+                    },
+                    modifier = Modifier
+                        .size(20.dp)
+                        .weight(1f)
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.KeyboardArrowUp,
+                        contentDescription = "Increase value",
+                        modifier = Modifier.size(14.dp),
+                        tint = Color.Gray
+                    )
+                }
+
+                // Horizontal divider between arrows
                 Divider(
                     color = Color.LightGray,
-                    modifier = Modifier
-                        .height(50.dp)  // Set the height of the divider
-                        .width(1.dp)
-                )// Set the thickness (width) of the divider
+                    thickness = 1.dp,
+                    modifier = Modifier.fillMaxWidth()
+                )
 
-                // Up and Down buttons
-                Column {
-                    // Up Arrow
-                    IconButton(
-                        onClick = {
-                            // Increment value, ensuring it doesn't go above the max
-                            val newValue = (value + 1).coerceIn(range)
-                            if (newValue != value) {
-                                value = newValue
-                                onValueChange(value)
-                            }
-                        },
-                        modifier = Modifier.size(24.dp)
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.KeyboardArrowUp,
-                            contentDescription = "Increase value"
-                        )
-                    }
-                    Divider(
-                        color = Color.LightGray,
-                        thickness = 1.dp,
-                        modifier = Modifier.fillMaxWidth())
-                    // Down Arrow
-                    IconButton(
-                        onClick = {
-                            // Decrement value, ensuring it doesn't go below the min
-                            val newValue = (value - 1).coerceIn(range)
-                            if (newValue != value) {
-                                value = newValue
-                                onValueChange(value)
-                            }
-                        },
-                        modifier = Modifier.size(24.dp)
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.KeyboardArrowDown,
-                            contentDescription = "Decrease value"
-                        )
-                    }
+                // Down arrow
+                IconButton(
+                    onClick = {
+                        val newValue = (value - 1).coerceIn(range)
+                        if (newValue != value) {
+                            value = newValue
+                            onValueChange(value)
+                        }
+                    },
+                    modifier = Modifier
+                        .size(20.dp)
+                        .weight(1f)
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.KeyboardArrowDown,
+                        contentDescription = "Decrease value",
+                        modifier = Modifier.size(14.dp),
+                        tint = Color.Gray
+                    )
                 }
             }
         }
