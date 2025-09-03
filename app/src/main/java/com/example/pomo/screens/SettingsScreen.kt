@@ -2,6 +2,7 @@ package com.example.pomo.screens
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -191,14 +192,16 @@ fun SettingsNumberPicker(
             verticalAlignment = Alignment.CenterVertically
         ) {
             // Number text
-            Text(
-                text = "$value",
-                modifier = Modifier
-                    .weight(1f)
-                    .padding(start = 12.dp),
-                fontSize = 16.sp,
-                color = Color.Black
-            )
+            Box(
+                modifier = Modifier.weight(1f),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = "$value",
+                    fontSize = 16.sp,
+                    color = Color.Black
+                )
+            }
 
             // Vertical divider
             Divider(
