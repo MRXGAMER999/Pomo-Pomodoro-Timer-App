@@ -39,7 +39,8 @@ import org.koin.androidx.compose.koinViewModel
 @Composable
 fun PomodoroScreen(
     modifier: Modifier = Modifier,
-    viewModel: PomodoroViewModel = koinViewModel()
+    viewModel: PomodoroViewModel = koinViewModel(),
+    onClick: () -> Unit
 ) {
     val timeLeftInMillis by viewModel.timeLeftInMillis.collectAsState()
     val isRunning by viewModel.isRunning.collectAsState()
@@ -127,7 +128,7 @@ fun PomodoroScreen(
             ) {
                 // Reset Button
                 TimerControlButton(
-                    onClick = { viewModel.resetTimer() },
+                    onClick = { onClick() },
                     backgroundColor = theme.surfaceLight,
                     contentColor = theme.primary,
                     size = 64.dp
@@ -206,5 +207,7 @@ private fun TimerControlButton(
 @Preview(showSystemUi = true)
 @Composable
 fun PomodoroScreenPreview() {
-    PomodoroScreen()
+    PomodoroScreen(onClick = {
+
+    })
 }
