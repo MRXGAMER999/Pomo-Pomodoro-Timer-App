@@ -11,16 +11,19 @@ import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.runtime.rememberSavedStateNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
 import androidx.navigation3.ui.rememberSceneSetupNavEntryDecorator
+import com.example.pomo.TimerMode
 import com.example.pomo.screens.PomodoroDetailsScreen
 import com.example.pomo.screens.PomodoroScreen
 import com.example.pomo.screens.SettingsScreen
+import com.example.pomo.ui.theme.toTheme
 import kotlinx.serialization.Serializable
 
 @Serializable
 object PomodoroScreenKey: NavKey
 
+
 @Serializable
-object SettingsScreenKey: NavKey
+data class SettingsScreenKey(val timerMode: TimerMode = TimerMode.Focus): NavKey
 
 @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
 @Composable
@@ -37,14 +40,19 @@ fun NavigationRoot(
                     NavEntry(
                         key = key,
                     ) {
-                        PomodoroScreen(onClick = {backStack.add(SettingsScreenKey)})
+                        PomodoroScreen(onClick = {currentMode ->
+
+                            backStack.add(SettingsScreenKey(currentMode))})
                     }
                 }
                 is SettingsScreenKey -> {
                     NavEntry(
                         key = key,
                     ) {
-                        SettingsScreen(onClose = {backStack.removeLast()})
+                        val theme = key.timerMode.toTheme()
+                        SettingsScreen(
+                            theme = theme,
+                            onClose = {backStack.removeLast()})
                     }
                 }
                 else -> throw RuntimeException("Invalid NavKey.")
