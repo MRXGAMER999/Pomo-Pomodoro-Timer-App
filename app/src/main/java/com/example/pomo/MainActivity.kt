@@ -17,6 +17,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.pomo.navigation.NavigationRoot
 import com.example.pomo.screens.PomodoroScreen
 import com.example.pomo.ui.PomodoroViewModel
 import com.example.pomo.ui.theme.PomoTheme
@@ -27,9 +28,15 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             PomoTheme {
-                    PomodoroScreen()
+                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+                    NavigationRoot(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(innerPadding)
+                    )
                 }
             }
+        }
     }
 }
 
