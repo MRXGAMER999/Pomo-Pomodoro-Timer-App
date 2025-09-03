@@ -25,8 +25,8 @@ fun NavigationRoot(
 ){
     val backStack = rememberNavBackStack(PomodoroScreenKey)
     NavDisplay(
+        modifier = modifier,
         backStack = backStack,
-
         entryProvider = { key ->
             when(key) {
                 is PomodoroScreenKey -> {
