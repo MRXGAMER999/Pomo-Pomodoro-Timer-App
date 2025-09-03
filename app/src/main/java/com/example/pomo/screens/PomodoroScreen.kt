@@ -37,11 +37,12 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.pomo.R
 import com.example.pomo.TimerMode
 import com.example.pomo.ui.PomodoroViewModel
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun PomodoroScreen(
     modifier: Modifier = Modifier,
-    viewModel: PomodoroViewModel = viewModel()
+    viewModel: PomodoroViewModel = koinViewModel()
 ) {
     val timeLeftInMillis by viewModel.timeLeftInMillis.collectAsState()
     val isRunning by viewModel.isRunning.collectAsState()
