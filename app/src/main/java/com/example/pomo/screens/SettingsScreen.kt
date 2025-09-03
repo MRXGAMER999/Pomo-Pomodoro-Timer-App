@@ -187,7 +187,7 @@ fun SettingsNumberPicker(
             shape = MaterialTheme.shapes.medium,
             border = BorderStroke(1.dp, Color.LightGray)
         ) {
-            Row(
+            Row(modifier = Modifier.padding(vertical = 4.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 // Text displaying the current value
