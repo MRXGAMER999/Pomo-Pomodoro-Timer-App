@@ -13,6 +13,7 @@ composeBom = "2025.08.01"
 materialIconsExtended = "1.7.8"
 nav3 = "1.0.0-alpha08"
 lifecycleViewmodelNav3 = "1.0.0-alpha04"
+realmKotlin = "3.0.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -36,6 +37,7 @@ koin-androidx-compose = { module = "io.insert-koin:koin-androidx-compose", versi
 androidx-navigation3-runtime = { group = "androidx.navigation3", name = "navigation3-runtime", version.ref = "nav3" }
 androidx-navigation3-ui = { group = "androidx.navigation3", name = "navigation3-ui", version.ref = "nav3" }
 androidx-lifecycle-viewmodel-navigation3 = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-navigation3", version.ref = "lifecycleViewmodelNav3" }
+realm-kotlin = { module = "io.realm.kotlin:library-base", version.ref = "realmKotlin" }
 
 
 
@@ -44,3 +46,4 @@ android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+realm-kotlin = { id = "io.realm.kotlin", version.ref = "realmKotlin" }
