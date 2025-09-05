@@ -33,6 +33,7 @@ import androidx.compose.ui.unit.sp
 import com.example.pomo.R
 import com.example.pomo.TimerMode
 import com.example.pomo.ui.PomodoroViewModel
+import com.example.pomo.ui.SettingsViewModel
 import com.example.pomo.ui.theme.toTheme
 import org.koin.androidx.compose.koinViewModel
 
@@ -40,14 +41,16 @@ import org.koin.androidx.compose.koinViewModel
 fun PomodoroScreen(
     modifier: Modifier = Modifier,
     viewModel: PomodoroViewModel = koinViewModel(),
+    settingsViewModel: SettingsViewModel = koinViewModel(),
     onClick: (TimerMode) -> Unit = {}
 ) {
     val timeLeftInMillis by viewModel.timeLeftInMillis.collectAsState()
     val isRunning by viewModel.isRunning.collectAsState()
     val currentMode by viewModel.currentMode.collectAsState()
+    val timerSettings by settingsViewModel.timerSettings.collectAsState()
 
-    // Get theme colors for current mode
-    val theme = currentMode.toTheme()
+    // Get theme colors for current mode with dark mode support
+    val theme = currentMode.toTheme(timerSettings.darkMode)
 
     // Convert milliseconds to minutes and seconds
     val minutes = (timeLeftInMillis / 1000) / 60

@@ -2,26 +2,41 @@ package com.example.pomo.ui
 
 import android.os.CountDownTimer
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.pomo.TimerMode
+import com.example.pomo.data.SettingsRepository
+import com.example.pomo.data.TimerSettings
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 
-class PomodoroViewModel: ViewModel() {
+class PomodoroViewModel(private val settingsRepository: SettingsRepository): ViewModel() {
     private val _currentMode = MutableStateFlow(TimerMode.Focus)
     val currentMode: StateFlow<TimerMode> = _currentMode
     
-    private val FOCUS_TIME = 25 * 60 * 1000L // 25 minutes
-    private val SHORT_BREAK_TIME = 5 * 60 * 1000L // 5 minutes
-    private val LONG_BREAK_TIME = 15 * 60 * 1000L // 15 minutes
+    private var currentSettings = TimerSettings()
     
-    private val _timeLeftInMillis = MutableStateFlow(FOCUS_TIME)
+    private val _timeLeftInMillis = MutableStateFlow(25 * 60 * 1000L)
     val timeLeftInMillis: StateFlow<Long> = _timeLeftInMillis
     
     private val _isRunning = MutableStateFlow(false)
     val isRunning: StateFlow<Boolean> = _isRunning
     
     private var countDownTimer: CountDownTimer? = null
-    private var currentTimeMillis = FOCUS_TIME
+    
+    init {
+        // Listen to settings changes and update timer accordingly
+        settingsRepository.getTimerSettings()
+            .onEach { settings ->
+                currentSettings = settings
+                // If timer is not running, update the displayed time
+                if (!_isRunning.value) {
+                    resetTimer()
+                }
+            }
+            .launchIn(viewModelScope)
+    }
     
     fun toggleTimer() {
         if (_isRunning.value) {
@@ -57,13 +72,12 @@ class PomodoroViewModel: ViewModel() {
         countDownTimer?.cancel()
         _isRunning.value = false
         
-        // Reset based on current mode
+        // Reset based on current mode using settings
         _timeLeftInMillis.value = when (_currentMode.value) {
-            TimerMode.Focus -> FOCUS_TIME
-            TimerMode.ShortBreak -> SHORT_BREAK_TIME
-            TimerMode.LongBreak -> LONG_BREAK_TIME
+            TimerMode.Focus -> currentSettings.focusTimeMinutes * 60 * 1000L
+            TimerMode.ShortBreak -> currentSettings.shortBreakTimeMinutes * 60 * 1000L
+            TimerMode.LongBreak -> currentSettings.longBreakTimeMinutes * 60 * 1000L
         }
-        currentTimeMillis = _timeLeftInMillis.value
     }
     
     fun skipToNextMode() {

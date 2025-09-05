@@ -17,7 +17,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
-import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -26,7 +26,9 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
+import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -39,22 +41,50 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.pomo.TimerMode
+import com.example.pomo.ui.SettingsViewModel
 import com.example.pomo.ui.theme.TimerTheme
 import com.example.pomo.ui.theme.toTheme
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun SettingsScreen(
-    theme: TimerTheme = TimerMode.Focus.toTheme(), // Default theme
-    onClose: () -> Unit = {}
+    theme: TimerTheme = TimerMode.Focus.toTheme(false), // Default theme (light mode)
+    onClose: () -> Unit = {},
+    viewModel: SettingsViewModel = koinViewModel()
 ) {
-    val darkMode by remember { mutableStateOf(false) }
+    val timerSettings by viewModel.timerSettings.collectAsState()
+
+    SettingsScreenContent(
+        theme = theme,
+        focusLength = timerSettings.focusTimeMinutes,
+        shortBreakLength = timerSettings.shortBreakTimeMinutes,
+        longBreakLength = timerSettings.longBreakTimeMinutes,
+        darkMode = timerSettings.darkMode,
+        onClose = onClose,
+        onUpdateFocus = { viewModel.updateFocusTime(it) },
+        onUpdateShortBreak = { viewModel.updateShortBreakTime(it) },
+        onUpdateLongBreak = { viewModel.updateLongBreakTime(it) },
+        onUpdateDarkMode = { viewModel.updateDarkMode(it) }
+    )
+}
+
+@Composable
+fun SettingsScreenContent(
+    theme: TimerTheme,
+    focusLength: Int,
+    shortBreakLength: Int,
+    longBreakLength: Int,
+    darkMode: Boolean,
+    onClose: () -> Unit,
+    onUpdateFocus: (Int) -> Unit,
+    onUpdateShortBreak: (Int) -> Unit,
+    onUpdateLongBreak: (Int) -> Unit,
+    onUpdateDarkMode: (Boolean) -> Unit
+) {
+    // Local toggles – preview-safe and independent of DI (except dark mode)
     val autoResumeTimer by remember { mutableStateOf(true) }
     val sound by remember { mutableStateOf(true) }
     val notifications by remember { mutableStateOf(true) }
-
-    var focusLength by remember { mutableStateOf(25) }
-    var shortBreakLength by remember { mutableStateOf(5) }
-    var longBreakLength by remember { mutableStateOf(15) }
 
     Scaffold(
         containerColor = theme.background,
@@ -109,7 +139,9 @@ fun SettingsScreen(
                     ) {
                         ThemedNumberPicker(
                             initialValue = focusLength,
-                            onValueChange = { focusLength = it },
+                            onValueChange = { newValue ->
+                                onUpdateFocus(newValue)
+                            },
                             theme = theme
                         )
                     }
@@ -120,7 +152,9 @@ fun SettingsScreen(
                     ) {
                         ThemedNumberPicker(
                             initialValue = shortBreakLength,
-                            onValueChange = { shortBreakLength = it },
+                            onValueChange = { newValue ->
+                                onUpdateShortBreak(newValue)
+                            },
                             theme = theme
                         )
                     }
@@ -131,22 +165,24 @@ fun SettingsScreen(
                     ) {
                         ThemedNumberPicker(
                             initialValue = longBreakLength,
-                            onValueChange = { longBreakLength = it },
+                            onValueChange = { newValue ->
+                                onUpdateLongBreak(newValue)
+                            },
                             theme = theme
                         )
                     }
 
                     // Toggle Settings
-                    SettingsRow(
-                        label = "Dark Mode",
-                        theme = theme
-                    ) {
-                        ThemedSwitch(
-                            checked = darkMode,
-                            onCheckedChange = { /* Handle dark mode toggle */ },
-                            theme = theme
-                        )
-                    }
+                                         SettingsRow(
+                         label = "Dark Mode",
+                         theme = theme
+                     ) {
+                         ThemedSwitch(
+                             checked = darkMode,
+                             onCheckedChange = onUpdateDarkMode,
+                             theme = theme
+                         )
+                     }
 
                     SettingsRow(
                         label = "Auto Resume Timer",
@@ -258,7 +294,7 @@ private fun ThemedNumberPicker(
     onValueChange: (Int) -> Unit,
     theme: TimerTheme
 ) {
-    var value by remember { mutableStateOf(initialValue) }
+    var value by remember(initialValue) { mutableStateOf(initialValue) }
 
     Surface(
         modifier = Modifier
@@ -286,11 +322,10 @@ private fun ThemedNumberPicker(
             }
 
             // Vertical divider
-            Divider(
+            VerticalDivider(
                 color = theme.border.copy(alpha = 0.3f),
-                modifier = Modifier
-                    .fillMaxHeight()
-                    .width(1.dp)
+                thickness = 1.dp,
+                modifier = Modifier.fillMaxHeight()
             )
 
             // Arrow buttons column
@@ -322,7 +357,7 @@ private fun ThemedNumberPicker(
                 }
 
                 // Horizontal divider between arrows
-                Divider(
+                HorizontalDivider(
                     color = theme.border.copy(alpha = 0.3f),
                     thickness = 1.dp,
                     modifier = Modifier.fillMaxWidth()
@@ -356,17 +391,50 @@ private fun ThemedNumberPicker(
 @Preview(showBackground = true)
 @Composable
 fun SettingsScreenPreview() {
-    SettingsScreen(theme = TimerMode.LongBreak.toTheme())
+    SettingsScreenContent(
+        theme = TimerMode.LongBreak.toTheme(true),
+        focusLength = 25,
+        shortBreakLength = 5,
+        longBreakLength = 15,
+        darkMode = false,
+        onClose = {},
+        onUpdateFocus = {},
+        onUpdateShortBreak = {},
+        onUpdateLongBreak = {},
+        onUpdateDarkMode = {}
+    )
 }
 
 @Preview(showBackground = true)
 @Composable
 fun SettingsScreenFocusPreview() {
-    SettingsScreen(theme = TimerMode.Focus.toTheme())
+    SettingsScreenContent(
+        theme = TimerMode.Focus.toTheme(false),
+        focusLength = 25,
+        shortBreakLength = 5,
+        longBreakLength = 15,
+        darkMode = false,
+        onClose = {},
+        onUpdateFocus = {},
+        onUpdateShortBreak = {},
+        onUpdateLongBreak = {},
+        onUpdateDarkMode = {}
+    )
 }
 
 @Preview(showBackground = true)
 @Composable
 fun SettingsScreenBreakPreview() {
-    SettingsScreen(theme = TimerMode.ShortBreak.toTheme())
+    SettingsScreenContent(
+        theme = TimerMode.ShortBreak.toTheme(true),
+        focusLength = 25,
+        shortBreakLength = 5,
+        longBreakLength = 15,
+        darkMode = true,
+        onClose = {},
+        onUpdateFocus = {},
+        onUpdateShortBreak = {},
+        onUpdateLongBreak = {},
+        onUpdateDarkMode = {}
+    )
 }

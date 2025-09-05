@@ -6,6 +6,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.annotation.RequiresApi
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -19,27 +20,44 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.pomo.data.AppInitRepository
 import com.example.pomo.navigation.NavigationRoot
-import com.example.pomo.screens.PomodoroScreen
-import com.example.pomo.ui.PomodoroViewModel
-import com.example.pomo.ui.theme.PomoTheme
+import com.example.pomo.ui.AppTheme
+import org.koin.android.ext.android.inject
 
 class MainActivity : ComponentActivity() {
     @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
     override fun onCreate(savedInstanceState: Bundle?) {
+        // Install splash screen before super.onCreate()
+        val splashScreen = installSplashScreen()
+        
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        
+        // Keep splash screen visible while initializing
+        splashScreen.setKeepOnScreenCondition {
+            val appInitRepository: AppInitRepository by inject()
+            !appInitRepository.isInitialized.value
+        }
+        
         setContent {
-            PomoTheme() {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    NavigationRoot(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(innerPadding)
-                    )
-                }
+            AppTheme {
+                MainContent()
             }
         }
+    }
+}
+
+@RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
+@Composable
+private fun MainActivity.MainContent() {
+    // Show main app content - initialization happens in background
+    Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+        NavigationRoot(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding)
+        )
     }
 }
 

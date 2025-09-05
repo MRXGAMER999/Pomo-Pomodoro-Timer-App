@@ -1,15 +1,20 @@
 package com.example.pomo.di
+import com.example.pomo.data.AppInitRepository
+import com.example.pomo.data.SettingsRepository
 import com.example.pomo.ui.PomodoroViewModel
+import com.example.pomo.ui.SettingsViewModel
+import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
-
 import org.koin.dsl.module
 
-val viewModelModule = module {
-    viewModel{ PomodoroViewModel() }
+val repositoryModule = module {
+    single<SettingsRepository> { SettingsRepository(androidContext()) }
+    single<AppInitRepository> { AppInitRepository() }
 }
 
-val repositoryModule = module {
-    // Example: single<TimerRepository> { TimerRepositoryImpl() }
+val viewModelModule = module {
+    viewModel { PomodoroViewModel(get()) }
+    viewModel { SettingsViewModel(get()) }
 }
 
 val useCaseModule = module {
@@ -18,7 +23,7 @@ val useCaseModule = module {
 
 // Combine all modules
 val appModules = listOf(
-    viewModelModule,
     repositoryModule,
+    viewModelModule,
     useCaseModule
 )
