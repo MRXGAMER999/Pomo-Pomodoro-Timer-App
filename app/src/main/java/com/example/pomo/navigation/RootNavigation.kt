@@ -3,8 +3,11 @@ package com.example.pomo.navigation
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableLongStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
 import androidx.navigation3.runtime.NavEntry
@@ -36,6 +39,9 @@ fun NavigationRoot(
     val backStack = rememberNavBackStack(PomodoroScreenKey)
     val settingsViewModel: SettingsViewModel = koinViewModel()
     val timerSettings by settingsViewModel.timerSettings.collectAsState()
+    
+    // Debounce mechanism to prevent double-click crashes
+    val lastClickTime = remember { mutableLongStateOf(0L) }
     NavDisplay(
         modifier = modifier,
         backStack = backStack,
@@ -46,8 +52,12 @@ fun NavigationRoot(
                         key = key,
                     ) {
                         PomodoroScreen(onClick = {currentMode ->
-
-                            backStack.add(SettingsScreenKey(currentMode))})
+                            val currentTime = System.currentTimeMillis()
+                            if (currentTime - lastClickTime.longValue > 1000) {
+                                lastClickTime.longValue = currentTime
+                                backStack.add(SettingsScreenKey(currentMode))
+                            }
+                        })
                     }
                 }
                 is SettingsScreenKey -> {
@@ -57,7 +67,18 @@ fun NavigationRoot(
                         val theme = key.timerMode.toTheme(timerSettings.darkMode)
                         SettingsScreen(
                             theme = theme,
-                            onClose = {backStack.removeLast()})
+                            onClose = {
+                                val currentTime = System.currentTimeMillis()
+                                if (currentTime - lastClickTime.longValue > 1000) {
+                                    lastClickTime.longValue = currentTime
+                                    try {
+                                        backStack.removeLast()
+                                    } catch (e: Exception) {
+                                        // Safely handle any navigation exceptions
+                                    }
+                                }
+                            }
+                        )
                     }
                 }
                 else -> throw RuntimeException("Invalid NavKey.")
