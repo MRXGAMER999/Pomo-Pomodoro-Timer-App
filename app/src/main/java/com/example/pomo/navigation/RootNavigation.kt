@@ -14,7 +14,6 @@ import androidx.navigation3.runtime.rememberSavedStateNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
 import androidx.navigation3.ui.rememberSceneSetupNavEntryDecorator
 import com.example.pomo.TimerMode
-import com.example.pomo.screens.PomodoroDetailsScreen
 import com.example.pomo.screens.PomodoroScreen
 import com.example.pomo.screens.SettingsScreen
 import com.example.pomo.ui.SettingsViewModel

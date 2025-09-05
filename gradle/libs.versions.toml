@@ -13,7 +13,7 @@ composeBom = "2025.08.01"
 materialIconsExtended = "1.7.8"
 nav3 = "1.0.0-alpha08"
 lifecycleViewmodelNav3 = "1.0.0-alpha04"
-datastore = "1.1.1"
+datastore = "1.1.7"
 splashscreen = "1.0.1"
 
 [libraries]
