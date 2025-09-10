@@ -62,14 +62,14 @@ fun PomodoroScreen(
     Scaffold(
         modifier = modifier.fillMaxSize(),
         containerColor = theme.background,
-        contentWindowInsets = WindowInsets(0, 0, 0, 0)
+
     ) { innerPadding ->
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.SpaceBetween,
             modifier = Modifier
                 .fillMaxSize()
-                .windowInsetsPadding(WindowInsets.safeDrawing)
+                .padding(innerPadding)
                 .padding(horizontal = 16.dp)
         ) {
 

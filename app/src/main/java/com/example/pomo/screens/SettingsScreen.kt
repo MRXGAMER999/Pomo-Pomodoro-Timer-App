@@ -84,7 +84,7 @@ fun SettingsScreenContent(
     onUpdateLongBreak: (Int) -> Unit,
     onUpdateDarkMode: (Boolean) -> Unit
 ) {
-    // Local toggles – preview-safe and independent of DI (except dark mode)
+
     val autoResumeTimer by remember { mutableStateOf(true) }
     val sound by remember { mutableStateOf(true) }
     val notifications by remember { mutableStateOf(true) }
@@ -92,12 +92,11 @@ fun SettingsScreenContent(
     Scaffold(
         containerColor = theme.background,
         modifier = Modifier.fillMaxSize(),
-        contentWindowInsets = WindowInsets(0, 0, 0, 0)
     ) { innerPadding ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .windowInsetsPadding(WindowInsets.safeDrawing)
+                .padding(innerPadding)
                 .padding(20.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -177,16 +176,16 @@ fun SettingsScreenContent(
                     }
 
                     // Toggle Settings
-                                         SettingsRow(
-                         label = "Dark Mode",
-                         theme = theme
-                     ) {
-                         ThemedSwitch(
-                             checked = darkMode,
-                             onCheckedChange = onUpdateDarkMode,
-                             theme = theme
-                         )
-                     }
+                    SettingsRow(
+                        label = "Dark Mode",
+                        theme = theme
+                    ) {
+                        ThemedSwitch(
+                            checked = darkMode,
+                            onCheckedChange = onUpdateDarkMode,
+                            theme = theme
+                        )
+                    }
 
                     SettingsRow(
                         label = "Auto Resume Timer",
@@ -223,6 +222,7 @@ fun SettingsScreenContent(
                 }
             }
         }
+
     }
 }
 

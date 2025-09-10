@@ -31,18 +31,18 @@ data class SettingsScreenKey(val timerMode: TimerMode = TimerMode.Focus) : NavKe
 @Composable
 fun NavigationRoot(
     modifier: Modifier = Modifier,
-    onThemeChange: (Boolean) -> Unit // 👈 callback to MainActivity
+    onThemeChange: (Boolean) -> Unit
 ) {
     val backStack = rememberNavBackStack(PomodoroScreenKey)
     val settingsViewModel: SettingsViewModel = koinViewModel()
     val timerSettings by settingsViewModel.timerSettings.collectAsState()
 
-    // Notify MainActivity whenever theme changes
+
     LaunchedEffect(timerSettings.darkMode) {
         onThemeChange(timerSettings.darkMode)
     }
 
-    // Debounce mechanism for safe navigation
+
     val lastClickTime = remember { mutableLongStateOf(0L) }
 
     NavDisplay(
@@ -76,7 +76,7 @@ fun NavigationRoot(
                                     try {
                                         backStack.removeLast()
                                     } catch (e: Exception) {
-                                        // ignore navigation errors
+
                                     }
                                 }
                             }

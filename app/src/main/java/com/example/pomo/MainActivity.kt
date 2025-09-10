@@ -57,24 +57,12 @@ class MainActivity : ComponentActivity() {
 @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
 @Composable
 private fun MainActivity.MainContent() {
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-    ) {
-
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(Color.Red)
-        )
-
         NavigationRoot(
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier,
             onThemeChange = { darkMode ->
                 updateSystemBars(darkMode)
             }
         )
-    }
 }
 
 
